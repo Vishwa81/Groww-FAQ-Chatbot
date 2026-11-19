@@ -1,0 +1,35 @@
+HDFC MUTUAL FUND - OFFICIAL STATEMENT & CAS DOWNLOAD GUIDE
+Published by: HDFC Asset Management Company Limited
+Effective Date: November 01, 2026 | Document Type: Official Service Guide
+Official Portal: https://www.hdfcfund.com/services/consolidated-account-statement
+
+1. OVERVIEW OF MUTUAL FUND ACCOUNT STATEMENTS
+An Account Statement (AS) is an official consolidated document that provides a detailed summary of all mutual fund transactions and folio holdings for an investor. It includes purchases, redemptions, switches, systematic transactions (SIP/STP/SWP), and dividend/IDCW distributions. There is no charge or fee for generating or downloading your account statement.
+
+2. HOW TO DOWNLOAD YOUR HDFC MUTUAL FUND ACCOUNT STATEMENT ONLINE
+Investors can download or receive their account statement directly via the official HDFC Mutual Fund portal by following these steps:
+
+Step 1: Visit the official HDFC Mutual Fund Services portal at:
+https://www.hdfcfund.com/services/consolidated-account-statement
+
+Step 2: Enter your Identifier:
+- Select PAN (Permanent Account Number) to receive a consolidated statement of all folios linked to your PAN, OR
+- Select Folio Number to receive a statement specific to a single folio.
+
+Step 3: One-Time Password (OTP) Authentication:
+Click 'Send OTP' to receive a secure verification code on your registered mobile number and email ID. Enter the OTP to authenticate.
+
+Step 4: Select the Statement Duration:
+Choose from:
+- Current Financial Year
+- Previous Financial Year
+- Full Statement (since inception)
+- Select Period (custom date range)
+
+Step 5: Receive or Download Statement:
+Click 'SEND EMAIL' to receive your password-protected PDF statement immediately at your registered email address, or download it directly from the investor portal.
+
+3. CONSOLIDATED ACCOUNT STATEMENT (CAS) ACROSS ALL FUND HOUSES
+If you hold investments across multiple mutual funds (including HDFC and other AMCs):
+- CAMS CAS Portal: Investors can request an e-CAS covering all CAMS and KFintech serviced funds via https://www.camsonline.com/Investors/Statements/Consolidated-Account-Statement.
+- MFCentral Platform: Investors can view and download unified statements at https://www.mfcentral.com using PAN and mobile OTP authentication.

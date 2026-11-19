@@ -1,0 +1,39 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Streamlit cache and secrets
+.streamlit/secrets.toml
+
+# Vector DB & Data
+data/chroma_db/*
+!data/chroma_db/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Testing & logs
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# OS & IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
