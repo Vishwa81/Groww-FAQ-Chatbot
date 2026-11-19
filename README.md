@@ -2,6 +2,9 @@
 
 > **Product Management Fellowship Milestone — Production-Grade RAG Engine**  
 > *"Facts-only. No investment advice."*
+> 
+> 🌐 **Live Production Deployment on Vercel:** [https://groww-faq-chatbot.vercel.app](https://groww-faq-chatbot.vercel.app)  
+> 🔗 **GitHub Repository:** [https://github.com/Vishwa81/Groww-FAQ-Chatbot](https://github.com/Vishwa81/Groww-FAQ-Chatbot)
 
 A clean, modern, factual conversational assistant inspired by **Groww's** user experience. The assistant answers factual queries regarding select mutual fund schemes using official documents (Scheme Information Documents [SID] and Key Information Memorandums [KIM]).
 
