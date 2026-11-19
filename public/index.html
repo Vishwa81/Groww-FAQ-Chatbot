@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Groww Mutual Fund FAQ Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00D09C;
+      --primary-dark: #00b386;
+      --primary-light: #e6faf5;
+      --dark: #1e222b;
+      --text: #44475b;
+      --text-muted: #7c7e8c;
+      --bg: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --border: #E8EBEF;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 20px;
+      box-shadow: 0 2px 8px rgba(0, 208, 156, 0.3);
+    }
+
+    .brand-text h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.2px;
+    }
+
+    .brand-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid rgba(0, 208, 156, 0.3);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 6px var(--primary);
+    }
+
+    /* Scheme Filters */
+    .filter-bar {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+
+    .filter-pill {
+      background: #f1f3f6;
+      color: var(--text);
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .filter-pill:hover {
+      background: #e5e8ed;
+    }
+
+    .filter-pill.active {
+      background: var(--dark);
+      color: white;
+      border-color: var(--dark);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 20px 0;
+      overflow: hidden;
+    }
+
+    /* Chat Messages Box */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-bottom: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 82%;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+    }
+
+    .message.assistant {
+      align-self: flex-start;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .bubble {
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14.5px;
+      line-height: 1.55;
+    }
+
+    .message.user .bubble {
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+      font-weight: 500;
+    }
+
+    .message.assistant .bubble {
+      background: var(--card-bg);
+      color: var(--dark);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Citations Block */
+    .citations-card {
+      margin-top: 10px;
+      background: #fbfcfd;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .citations-header {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .citation-item {
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 13px;
+    }
+
+    .citation-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .citation-title {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 3px;
+    }
+
+    .citation-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .meta-tag {
+      background: #eef1f5;
+      color: var(--text);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .citation-link {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    .disclaimer-badge {
+      margin-top: 8px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      font-style: italic;
+    }
+
+    /* Suggestions */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .suggestion-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--dark);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-chip:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+
+    /* Input Area */
+    .input-container {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px 18px;
+      flex-shrink: 0;
+    }
+
+    .input-form {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input-box {
+      flex: 1;
+      background: #f1f3f6;
+      border: 1.5px solid transparent;
+      border-radius: 24px;
+      padding: 12px 20px;
+      font-size: 14.5px;
+      color: var(--dark);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .input-box:focus {
+      background: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 208, 156, 0.15);
+    }
+
+    .send-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0, 208, 156, 0.3);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">G</div>
+      <div class="brand-text">
+        <h1>Groww Mutual Fund FAQ Assistant</h1>
+        <p>HDFC Mutual Fund Official Disclosures • Facts-Only RAG Engine</p>
+      </div>
+    </div>
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span>Neon pgvector + Gemini</span>
+    </div>
+  </header>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <button class="filter-pill active" data-scheme="">All Schemes</button>
+    <button class="filter-pill" data-scheme="HDFC Nifty 50 Index Fund">HDFC Nifty 50 Index Fund</button>
+    <button class="filter-pill" data-scheme="HDFC Flexi Cap Fund">HDFC Flexi Cap Fund</button>
+    <button class="filter-pill" data-scheme="HDFC ELSS Tax Saver Fund">HDFC ELSS Tax Saver Fund</button>
+    <button class="filter-pill" data-scheme="General Account Operations">Account Statements & CAS</button>
+  </div>
+
+  <!-- Chat Content -->
+  <main>
+    <div class="chat-messages" id="chatMessages">
+      
+      <!-- Welcome message -->
+      <div class="message assistant">
+        <div class="bubble">
+          <p><strong>Welcome to the Groww Mutual Fund FAQ Assistant!</strong></p>
+          <p style="margin-top: 6px;">I provide strictly verified factual answers from official HDFC Scheme Information Documents (SID), Key Information Memorandums (KIM), and latest monthly factsheets.</p>
+          <p style="margin-top: 6px; font-size: 13px; color: var(--text-muted);"><em>⚠️ Compliance Notice: I provide factual disclosures only. Investment recommendations, returns forecasts, and portfolio advice are strictly prohibited.</em></p>
+          
+          <div class="suggestions" style="margin-top: 14px;">
+            <button class="suggestion-chip" onclick="askQuestion('What is the expense ratio of HDFC Flexi Cap Fund?')">💰 Flexi Cap Expense Ratio</button>
+            <button class="suggestion-chip" onclick="askQuestion('What is the lock-in period for HDFC ELSS Tax Saver Fund?')">🔒 ELSS Lock-in Period</button>
+            <button class="suggestion-chip" onclick="askQuestion('What is the exit load for HDFC Nifty 50 Index Fund?')">📊 Nifty 50 Exit Load</button>
+            <button class="suggestion-chip" onclick="askQuestion('How can I download my mutual fund account statement?')">📄 Download Account Statement</button>
+            <button class="suggestion-chip" onclick="askQuestion('Should I buy HDFC Flexi Cap Fund for high returns?')">🛡️ Test Compliance Refusal</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Input Container -->
+  <div class="input-container">
+    <form class="input-form" id="chatForm" onsubmit="handleSend(event)">
+      <input 
+        type="text" 
+        class="input-box" 
+        id="userInput" 
+        placeholder="Ask a factual question (e.g. What is the TER, exit load, or lock-in?)..." 
+        autocomplete="off"
+        required
+      />
+      <button type="submit" class="send-btn" id="sendBtn" title="Send query">
+        ➤
+      </button>
+    </form>
+  </div>
+
+  <script>
+    let activeScheme = "";
+
+    // Scheme Filter Selection
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeScheme = pill.getAttribute('data-scheme');
+      });
+    });
+
+    function askQuestion(text) {
+      document.getElementById('userInput').value = text;
+      handleSend(new Event('submit'));
+    }
+
+    async function handleSend(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('userInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const chatMessages = document.getElementById('chatMessages');
+      const sendBtn = document.getElementById('sendBtn');
+
+      // Append User message
+      const userMsgDiv = document.createElement('div');
+      userMsgDiv.className = 'message user';
+      userMsgDiv.innerHTML = `<div class="bubble">${escapeHtml(query)}</div>`;
+      chatMessages.appendChild(userMsgDiv);
+      input.value = '';
+
+      // Append Assistant loading message
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'message assistant';
+      loadingDiv.innerHTML = `
+        <div class="bubble" style="display:flex; align-items:center; gap:8px;">
+          <div class="spinner" style="border-top-color: var(--primary);"></div>
+          <span>Retrieving official disclosures and synthesizing answer...</span>
+        </div>
+      `;
+      chatMessages.appendChild(loadingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      sendBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: query,
+            scheme_filter: activeScheme || null
+          })
+        });
+
+        const data = await response.json();
+        chatMessages.removeChild(loadingDiv);
+
+        const assistantMsgDiv = document.createElement('div');
+        assistantMsgDiv.className = 'message assistant';
+
+        let citationsHtml = '';
+        if (data.citations && data.citations.length > 0) {
+          citationsHtml = `
+            <div class="citations-card">
+              <div class="citations-header">📚 Official Document Citations</div>
+              ${data.citations.map(c => `
+                <div class="citation-item">
+                  <div class="citation-title">${escapeHtml(c.document_title || 'Official Document')}</div>
+                  <div class="citation-meta">
+                    <span class="meta-tag">📄 Page ${c.page_number}</span>
+                    <span class="meta-tag">📅 ${escapeHtml(c.published_date || 'N/A')}</span>
+                    ${c.scheme_name ? `<span class="meta-tag">🏷️ ${escapeHtml(c.scheme_name)}</span>` : ''}
+                    <a href="${escapeHtml(c.source_url)}" target="_blank" rel="noopener noreferrer" class="citation-link">
+                      View Official PDF ↗
+                    </a>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        const disclaimerHtml = `
+          <div class="disclaimer-badge">
+            Mutual fund investments are subject to market risks. Read all scheme related documents carefully.
+          </div>
+        `;
+
+        assistantMsgDiv.innerHTML = `
+          <div class="bubble">
+            <div>${formatAnswerText(data.answer_body || data.formatted_response || 'No response returned.')}</div>
+            ${citationsHtml}
+            ${disclaimerHtml}
+          </div>
+        `;
+
+        chatMessages.appendChild(assistantMsgDiv);
+      } catch (err) {
+        console.error(err);
+        if (loadingDiv.parentNode) chatMessages.removeChild(loadingDiv);
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'message assistant';
+        errorDiv.innerHTML = `
+          <div class="bubble" style="border-left: 3px solid #e53935;">
+            <strong>Error:</strong> Could not connect to the FAQ Assistant API. Please ensure the backend is running and environment variables are set.
+          </div>
+        `;
+        chatMessages.appendChild(errorDiv);
+      } finally {
+        sendBtn.disabled = false;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+
+    function formatAnswerText(text) {
+      return escapeHtml(text).replace(/\n/g, '<br>');
+    }
+
+    function escapeHtml(string) {
+      if (!string) return '';
+      return String(string)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+  </script>
+</body>
+</html>

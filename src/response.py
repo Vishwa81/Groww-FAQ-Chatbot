@@ -49,7 +49,7 @@ class FAQResponseService:
         else:
             self.retriever = ChromaRetriever(llm_client=self.llm)
 
-    def process_query(self, user_query: str) -> Dict[str, Any]:
+    def process_query(self, user_query: str, scheme_filter: Optional[str] = None) -> Dict[str, Any]:
         """
         Process user query through compliance guardrails and RAG pipeline.
         
@@ -123,7 +123,7 @@ class FAQResponseService:
 
         # 4. Perform Semantic Retrieval (Max 5 Chunks, Date-Sorted)
         try:
-            chunks = self.retriever.retrieve(user_query, n_results=5)
+            chunks = self.retriever.retrieve(user_query, n_results=5, scheme_filter=scheme_filter)
             if not chunks:
                 no_context_msg = "The requested information could not be verified from the available official sources."
                 formatted = (
@@ -316,3 +316,9 @@ class FAQResponseService:
 
 # Singleton service instance
 response_service = FAQResponseService()
+
+
+def generate_rag_response(query: str, scheme_filter: Optional[str] = None) -> Dict[str, Any]:
+    """Convenience helper to process query through the singleton FAQResponseService."""
+    return response_service.process_query(query, scheme_filter=scheme_filter)
+
