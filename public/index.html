@@ -3,23 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Groww Mutual Fund FAQ Assistant</title>
+  <title>Groww • Mutual Fund FAQ Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #00D09C;
       --primary-dark: #00b386;
-      --primary-light: #e6faf5;
-      --dark: #1e222b;
-      --text: #44475b;
-      --text-muted: #7c7e8c;
-      --bg: #F8F9FA;
-      --card-bg: #FFFFFF;
-      --border: #E8EBEF;
-      --radius: 12px;
-      --shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      --primary-soft: rgba(0, 208, 156, 0.1);
+      --primary-border: rgba(0, 208, 156, 0.25);
+      --accent-purple: #7C3AED;
+      --accent-purple-soft: rgba(124, 58, 237, 0.08);
+      --dark: #0F172A;
+      --dark-card: #1E293B;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --text-subtle: #94A3B8;
+      --bg-outer: #E9ECEF;
+      --bg-app: #FFFFFF;
+      --bg-sidebar: #F8FAFC;
+      --border: #E2E8F0;
+      --border-subtle: #F1F5F9;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --shadow-float: 0 20px 40px -10px rgba(15, 23, 42, 0.1);
     }
 
     * {
@@ -29,191 +42,813 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
+    h1, h2, h3, h4, .brand-title, .hero-headline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
     body {
-      background-color: var(--bg);
+      background: radial-gradient(circle at 10% 20%, #E2E8F0 0%, #CBD5E1 100%);
       color: var(--text);
       display: flex;
-      flex-direction: column;
-      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
       overflow: hidden;
     }
 
-    /* Header */
-    header {
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
+    /* Desktop Window Container (Cortex / Artixel inspiration) */
+    .app-window {
+      background: var(--bg-app);
+      width: 100%;
+      max-width: 1380px;
+      height: 94vh;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+      display: flex;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      position: relative;
+    }
+
+    /* ========================================================
+       SIDEBAR
+       ======================================================== */
+    .sidebar {
+      width: 270px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 20;
+    }
+
+    .sidebar.collapsed {
+      width: 0;
+      transform: translateX(-100%);
+      overflow: hidden;
+      border-right: none;
+    }
+
+    .sidebar-header {
+      padding: 20px 18px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00D09C 0%, #00B386 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 3px 10px rgba(0, 208, 156, 0.35);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.3px;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover {
+      background: var(--border);
+      color: var(--dark);
+    }
+
+    /* New Chat Button (Black Pill matching Cortex) */
+    .btn-new-chat {
+      margin: 6px 16px 12px;
+      background: #0F172A;
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+      transition: all 0.2s;
+    }
+
+    .btn-new-chat:hover {
+      background: #1E293B;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    }
+
+    /* Search Box */
+    .sidebar-search {
+      margin: 0 16px 14px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 30px 8px 30px;
+      font-size: 12.5px;
+      color: var(--dark);
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-soft);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-subtle);
+      pointer-events: none;
+    }
+
+    .search-kbd {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      background: #F1F5F9;
+      color: var(--text-muted);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    /* Nav Links */
+    .nav-section {
+      padding: 0 10px;
+      margin-bottom: 12px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: #EDF2F7;
+      color: var(--dark);
+    }
+
+    .nav-item.active {
+      background: #FFFFFF;
+      border-color: var(--border);
+      color: var(--dark);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-item svg {
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .nav-item.active svg {
+      color: var(--primary);
+    }
+
+    /* History List */
+    .history-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 10px;
+    }
+
+    .history-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-subtle);
+      padding: 10px 12px 6px;
+    }
+
+    .history-item {
+      padding: 7px 12px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.15s;
+      display: block;
+    }
+
+    .history-item:hover {
+      background: #EDF2F7;
+      color: var(--dark);
+    }
+
+    /* Sidebar Footer / Profile */
+    .sidebar-footer {
+      padding: 12px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10B981, #065F46);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      overflow: hidden;
+    }
+
+    .user-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ========================================================
+       MAIN CANVAS
+       ======================================================== */
+    .main-canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #FFFFFF;
+      position: relative;
+    }
+
+    /* Top Bar */
+    .top-bar {
       padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 10;
     }
 
-    .brand {
+    .top-bar-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: var(--primary);
+    .btn-toggle-sidebar {
+      display: none;
+    }
+
+    .model-selector {
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: 20px;
-      box-shadow: 0 2px 8px rgba(0, 208, 156, 0.3);
-    }
-
-    .brand-text h1 {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--dark);
-      letter-spacing: -0.2px;
-    }
-
-    .brand-text p {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      gap: 8px;
       padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 13px;
       font-weight: 600;
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      border: 1px solid rgba(0, 208, 156, 0.3);
+      color: var(--dark);
+      cursor: pointer;
+      transition: all 0.15s;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
+    .model-selector:hover {
+      background: #F1F5F9;
+    }
+
+    .model-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--primary);
       box-shadow: 0 0 6px var(--primary);
     }
 
-    /* Scheme Filters */
-    .filter-bar {
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 24px;
+    .top-bar-right {
       display: flex;
+      align-items: center;
       gap: 8px;
-      overflow-x: auto;
-      flex-shrink: 0;
     }
 
-    .filter-pill {
-      background: #f1f3f6;
-      color: var(--text);
-      border: 1px solid transparent;
-      padding: 6px 14px;
+    .badge-compliance {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      color: #15803D;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .btn-secondary {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
       font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
-      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      color: var(--dark);
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* ========================================================
+       HERO EMPTY STATE (Exact match to Cortex Image 2)
+       ======================================================== */
+    .hero-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px 32px;
+      max-width: 820px;
+      margin: 0 auto;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .hero-container.hidden {
+      display: none;
+    }
+
+    /* 3D Glowing Iridescent Orb */
+    .orb-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .iridescent-orb {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #C4B5FD 0%, #A78BFA 25%, #00D09C 70%, #6366F1 100%);
+      box-shadow: 
+        0 15px 35px -5px rgba(124, 58, 237, 0.4),
+        0 8px 20px -3px rgba(0, 208, 156, 0.35),
+        inset -5px -5px 15px rgba(0, 0, 0, 0.15),
+        inset 5px 5px 12px rgba(255, 255, 255, 0.8);
+      animation: orbFloat 6s ease-in-out infinite, orbGlow 4s ease-in-out infinite alternate;
+      position: relative;
+    }
+
+    .orb-highlight {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      width: 22px;
+      height: 14px;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 80%);
+      transform: rotate(-30deg);
+      border-radius: 50%;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(4deg); }
+    }
+
+    @keyframes orbGlow {
+      0% { filter: saturate(1.1) brightness(1); }
+      100% { filter: saturate(1.3) brightness(1.08); }
+    }
+
+    .hero-greeting {
+      font-size: 15px;
+      font-weight: 600;
+      color: #8B5CF6;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .hero-headline {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 28px;
+      letter-spacing: -0.6px;
+      text-align: center;
+    }
+
+    /* ========================================================
+       FLOATING PROMPT CARD (Hero input)
+       ======================================================== */
+    .prompt-card {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-float);
+      padding: 16px 18px 12px;
+      margin-bottom: 24px;
       transition: all 0.2s;
     }
 
-    .filter-pill:hover {
-      background: #e5e8ed;
+    .prompt-card:focus-within {
+      border-color: #CBD5E1;
+      box-shadow: 0 25px 45px -10px rgba(15, 23, 42, 0.12), 0 0 0 3px rgba(0, 208, 156, 0.12);
     }
 
-    .filter-pill.active {
-      background: var(--dark);
+    .prompt-card textarea {
+      width: 100%;
+      min-height: 52px;
+      max-height: 140px;
+      border: none;
+      outline: none;
+      resize: none;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--dark);
+      background: transparent;
+    }
+
+    .prompt-card textarea::placeholder {
+      color: #94A3B8;
+    }
+
+    .prompt-card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #F1F5F9;
+    }
+
+    .action-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-purple-soft);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      color: var(--accent-purple);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pill-badge:hover {
+      background: rgba(124, 58, 237, 0.15);
+    }
+
+    .pill-badge select {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--accent-purple);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .action-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-send-hero {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00D09C 0%, #00B386 100%);
       color: white;
-      border-color: var(--dark);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0, 208, 156, 0.35);
+      transition: all 0.2s;
     }
 
-    /* Main Container */
-    main {
-      flex: 1;
+    .btn-send-hero:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 14px rgba(0, 208, 156, 0.45);
+    }
+
+    .btn-send-hero:disabled {
+      background: #CBD5E1;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Secondary options bar below prompt box */
+    .prompt-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .prompt-pills-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .quick-tag {
+      background: #F1F5F9;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .quick-tag:hover {
+      background: #E2E8F0;
+      color: var(--dark);
+    }
+
+    /* 3 Feature Prompt Cards (Matching Image 2) */
+    .feature-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+    }
+
+    .feature-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
-      max-width: 900px;
+      text-align: left;
+    }
+
+    .feature-card:hover {
+      border-color: #CBD5E1;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .feature-icon-wrapper {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .feature-card:nth-child(1) .feature-icon-wrapper {
+      color: #00D09C;
+      background: rgba(0, 208, 156, 0.08);
+      border-color: rgba(0, 208, 156, 0.2);
+    }
+
+    .feature-card:nth-child(2) .feature-icon-wrapper {
+      color: #8B5CF6;
+      background: rgba(139, 92, 246, 0.08);
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+
+    .feature-card:nth-child(3) .feature-icon-wrapper {
+      color: #3B82F6;
+      background: rgba(59, 130, 246, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .feature-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ========================================================
+       CONVERSATION / CHAT STREAM VIEW
+       ======================================================== */
+    .chat-view {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 24px 28px 120px;
+      max-width: 860px;
       width: 100%;
       margin: 0 auto;
-      padding: 16px 20px 0;
-      overflow: hidden;
     }
 
-    /* Chat Messages Box */
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
+    .chat-view.active {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
-      padding-bottom: 16px;
-      scroll-behavior: smooth;
     }
 
-    .message {
+    .message-row {
       display: flex;
-      flex-direction: column;
-      max-width: 82%;
-      animation: fadeIn 0.3s ease-in-out;
+      margin-bottom: 22px;
+      animation: messageSlideIn 0.25s ease-out;
     }
 
-    @keyframes fadeIn {
+    @keyframes messageSlideIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .message.user {
-      align-self: flex-end;
+    .message-row.user {
+      justify-content: flex-end;
     }
 
-    .message.assistant {
-      align-self: flex-start;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .bubble {
-      padding: 14px 18px;
-      border-radius: 16px;
+    .message-row.user .bubble-user {
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 12px 18px;
+      border-radius: 18px 18px 4px 18px;
       font-size: 14.5px;
-      line-height: 1.55;
+      line-height: 1.5;
+      max-width: 75%;
+      box-shadow: var(--shadow-sm);
     }
 
-    .message.user .bubble {
-      background: var(--primary);
+    .message-row.assistant {
+      justify-content: flex-start;
+      gap: 12px;
+    }
+
+    .assistant-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00D09C 0%, #00B386 100%);
       color: white;
-      border-bottom-right-radius: 4px;
-      font-weight: 500;
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      box-shadow: 0 2px 8px rgba(0, 208, 156, 0.3);
     }
 
-    .message.assistant .bubble {
-      background: var(--card-bg);
-      color: var(--dark);
+    .assistant-body {
+      flex: 1;
+      max-width: 90%;
+    }
+
+    .assistant-bubble {
+      background: #FFFFFF;
       border: 1px solid var(--border);
-      border-bottom-left-radius: 4px;
-      box-shadow: var(--shadow);
+      border-radius: 4px 18px 18px 18px;
+      padding: 16px 20px;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--dark);
+      box-shadow: var(--shadow-sm);
     }
 
     /* Citations Block */
-    .citations-card {
-      margin-top: 10px;
-      background: #fbfcfd;
+    .citations-box {
+      margin-top: 12px;
+      background: #F8FAFC;
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       padding: 12px 14px;
     }
 
-    .citations-header {
-      font-size: 11.5px;
+    .citations-heading {
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -224,278 +859,525 @@
       gap: 6px;
     }
 
-    .citation-item {
+    .citation-entry {
       padding: 6px 0;
-      border-bottom: 1px dashed var(--border);
-      font-size: 13px;
+      border-bottom: 1px dashed #E2E8F0;
+      font-size: 12.5px;
     }
 
-    .citation-item:last-child {
+    .citation-entry:last-child {
       border-bottom: none;
       padding-bottom: 0;
     }
 
-    .citation-title {
+    .citation-name {
       font-weight: 600;
       color: var(--dark);
       margin-bottom: 3px;
     }
 
-    .citation-meta {
+    .citation-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      font-size: 11px;
       margin-top: 4px;
+      font-size: 11px;
     }
 
-    .meta-tag {
-      background: #eef1f5;
+    .tag-chip {
+      background: #E2E8F0;
       color: var(--text);
       padding: 2px 7px;
       border-radius: 4px;
       font-weight: 500;
     }
 
-    .citation-link {
+    .tag-link {
       color: var(--primary-dark);
       text-decoration: none;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
-    .citation-link:hover {
+    .tag-link:hover {
       text-decoration: underline;
     }
 
-    .disclaimer-badge {
-      margin-top: 8px;
+    .compliance-footer {
+      margin-top: 10px;
       font-size: 11.5px;
       color: var(--text-muted);
-      border-top: 1px solid var(--border);
+      border-top: 1px solid #F1F5F9;
       padding-top: 8px;
       font-style: italic;
     }
 
-    /* Suggestions */
-    .suggestions {
+    /* Pinned Bottom Input Bar (when chat is active) */
+    .bottom-input-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 25%, #FFFFFF 100%);
+      padding: 16px 28px 20px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
     }
 
-    .suggestion-chip {
-      background: var(--card-bg);
+    .bottom-input-container {
+      max-width: 860px;
+      width: 100%;
+      background: #FFFFFF;
       border: 1px solid var(--border);
-      color: var(--dark);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12.5px;
-      font-weight: 500;
-      cursor: pointer;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      display: flex;
+      align-items: center;
+      padding: 6px 8px 6px 16px;
+      gap: 10px;
       transition: all 0.2s;
     }
 
-    .suggestion-chip:hover {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary-dark);
+    .bottom-input-container:focus-within {
+      border-color: #CBD5E1;
+      box-shadow: 0 12px 30px -5px rgba(15, 23, 42, 0.12), 0 0 0 3px rgba(0, 208, 156, 0.12);
     }
 
-    /* Input Area */
-    .input-container {
-      background: var(--card-bg);
-      border-top: 1px solid var(--border);
-      padding: 14px 20px 18px;
-      flex-shrink: 0;
-    }
-
-    .input-form {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .input-box {
+    .bottom-input-container input {
       flex: 1;
-      background: #f1f3f6;
-      border: 1.5px solid transparent;
-      border-radius: 24px;
-      padding: 12px 20px;
+      border: none;
+      outline: none;
       font-size: 14.5px;
       color: var(--dark);
-      outline: none;
-      transition: all 0.2s;
+      background: transparent;
     }
 
-    .input-box:focus {
-      background: white;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0, 208, 156, 0.15);
+    .bottom-input-container input::placeholder {
+      color: #94A3B8;
     }
 
-    .send-btn {
-      background: var(--primary);
-      border: none;
-      color: white;
-      width: 44px;
-      height: 44px;
+    .btn-send-bottom {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
+      background: linear-gradient(135deg, #00D09C 0%, #00B386 100%);
+      color: white;
+      border: none;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 18px;
-      box-shadow: 0 2px 8px rgba(0, 208, 156, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 208, 156, 0.35);
       transition: all 0.2s;
       flex-shrink: 0;
     }
 
-    .send-btn:hover {
-      background: var(--primary-dark);
+    .btn-send-bottom:hover {
       transform: scale(1.05);
     }
 
-    .send-btn:disabled {
-      background: #ccc;
+    .btn-send-bottom:disabled {
+      background: #CBD5E1;
+      box-shadow: none;
       cursor: not-allowed;
       transform: none;
     }
 
-    /* Spinner */
-    .spinner {
+    /* Loading Spinner */
+    .spinner-pulse {
       display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 208, 156, 0.3);
       border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.8s linear infinite;
+      border-top-color: var(--primary);
+      animation: spin 0.7s linear infinite;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      body {
+        padding: 0;
+      }
+      .app-window {
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+      .sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        box-shadow: var(--shadow-lg);
+      }
+      .btn-toggle-sidebar {
+        display: flex;
+      }
+      .feature-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-headline {
+        font-size: 26px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <div class="brand">
-      <div class="brand-logo">G</div>
-      <div class="brand-text">
-        <h1>Groww Mutual Fund FAQ Assistant</h1>
-        <p>HDFC Mutual Fund Official Disclosures • Facts-Only RAG Engine</p>
-      </div>
-    </div>
-    <div class="status-badge">
-      <span class="status-dot"></span>
-      <span>Neon pgvector + Gemini</span>
-    </div>
-  </header>
+  <div class="app-window">
 
-  <!-- Filter Bar -->
-  <div class="filter-bar">
-    <button class="filter-pill active" data-scheme="">All Schemes</button>
-    <button class="filter-pill" data-scheme="HDFC Nifty 50 Index Fund">HDFC Nifty 50 Index Fund</button>
-    <button class="filter-pill" data-scheme="HDFC Flexi Cap Fund">HDFC Flexi Cap Fund</button>
-    <button class="filter-pill" data-scheme="HDFC ELSS Tax Saver Fund">HDFC ELSS Tax Saver Fund</button>
-    <button class="filter-pill" data-scheme="General Account Operations">Account Statements & CAS</button>
-  </div>
-
-  <!-- Chat Content -->
-  <main>
-    <div class="chat-messages" id="chatMessages">
+    <!-- ========================================================
+         SIDEBAR
+         ======================================================== -->
+    <aside class="sidebar" id="sidebar">
       
-      <!-- Welcome message -->
-      <div class="message assistant">
-        <div class="bubble">
-          <p><strong>Welcome to the Groww Mutual Fund FAQ Assistant!</strong></p>
-          <p style="margin-top: 6px;">I provide strictly verified factual answers from official HDFC Scheme Information Documents (SID), Key Information Memorandums (KIM), and latest monthly factsheets.</p>
-          <p style="margin-top: 6px; font-size: 13px; color: var(--text-muted);"><em>⚠️ Compliance Notice: I provide factual disclosures only. Investment recommendations, returns forecasts, and portfolio advice are strictly prohibited.</em></p>
-          
-          <div class="suggestions" style="margin-top: 14px;">
-            <button class="suggestion-chip" onclick="askQuestion('What is the expense ratio of HDFC Flexi Cap Fund?')">💰 Flexi Cap Expense Ratio</button>
-            <button class="suggestion-chip" onclick="askQuestion('What is the lock-in period for HDFC ELSS Tax Saver Fund?')">🔒 ELSS Lock-in Period</button>
-            <button class="suggestion-chip" onclick="askQuestion('What is the exit load for HDFC Nifty 50 Index Fund?')">📊 Nifty 50 Exit Load</button>
-            <button class="suggestion-chip" onclick="askQuestion('How can I download my mutual fund account statement?')">📄 Download Account Statement</button>
-            <button class="suggestion-chip" onclick="askQuestion('Should I buy HDFC Flexi Cap Fund for high returns?')">🛡️ Test Compliance Refusal</button>
+      <!-- Sidebar Header -->
+      <div class="sidebar-header">
+        <a href="#" class="brand-pill">
+          <div class="brand-icon">G</div>
+          <span class="brand-title">Groww MF AI</span>
+        </a>
+        <button class="btn-icon" onclick="toggleSidebar()" title="Collapse Sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+        </button>
+      </div>
+
+      <!-- + New Chat Button -->
+      <button class="btn-new-chat" onclick="resetToNewChat()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        <span>New chat</span>
+      </button>
+
+      <!-- Search Input -->
+      <div class="sidebar-search">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" class="search-input" id="sidebarSearch" placeholder="Search questions..." oninput="filterHistory(this.value)">
+        <span class="search-kbd">⌘K</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="nav-section">
+        <div class="nav-item active" onclick="setSchemeFilter('')" data-nav="all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>
+          <span>All Schemes</span>
+        </div>
+        <div class="nav-item" onclick="setSchemeFilter('HDFC Nifty 50 Index Fund')" data-nav="nifty50">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+          <span>Nifty 50 Index</span>
+        </div>
+        <div class="nav-item" onclick="setSchemeFilter('HDFC Flexi Cap Fund')" data-nav="flexicap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          <span>Flexi Cap Fund</span>
+        </div>
+        <div class="nav-item" onclick="setSchemeFilter('HDFC ELSS Tax Saver Fund')" data-nav="elss">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>ELSS Tax Saver</span>
+        </div>
+        <div class="nav-item" onclick="setSchemeFilter('General Account Operations')" data-nav="operations">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Account & CAS</span>
+        </div>
+      </div>
+
+      <!-- Recent Questions / History -->
+      <div class="history-container" id="historyContainer">
+        <div class="history-group-title">Recent Inquiries</div>
+        <div id="historyList">
+          <div class="history-item" onclick="triggerPreset('What is the expense ratio of HDFC Flexi Cap Fund?')">Flexi Cap Expense Ratio (TER)</div>
+          <div class="history-item" onclick="triggerPreset('What is the lock-in period for HDFC ELSS Tax Saver Fund?')">ELSS 3-Year Lock-in Terms</div>
+          <div class="history-item" onclick="triggerPreset('What is the exit load for HDFC Nifty 50 Index Fund?')">Nifty 50 Nil Exit Load</div>
+          <div class="history-item" onclick="triggerPreset('How can I download my mutual fund account statement?')">Download Statement & CAS</div>
+        </div>
+      </div>
+
+      <!-- User Profile Card -->
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">VR</div>
+          <div class="user-info">
+            <div class="user-name">Vishwajeet Rawat</div>
+            <div class="user-role">Groww Investor • Folio Active</div>
           </div>
         </div>
+        <button class="btn-icon" title="Neon Database Connected">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D09C" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </button>
       </div>
 
-    </div>
-  </main>
+    </aside>
 
-  <!-- Input Container -->
-  <div class="input-container">
-    <form class="input-form" id="chatForm" onsubmit="handleSend(event)">
-      <input 
-        type="text" 
-        class="input-box" 
-        id="userInput" 
-        placeholder="Ask a factual question (e.g. What is the TER, exit load, or lock-in?)..." 
-        autocomplete="off"
-        required
-      />
-      <button type="submit" class="send-btn" id="sendBtn" title="Send query">
-        ➤
-      </button>
-    </form>
+    <!-- ========================================================
+         MAIN CANVAS
+         ======================================================== -->
+    <main class="main-canvas">
+
+      <!-- Top Bar Header -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="btn-icon btn-toggle-sidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          
+          <div class="model-selector" id="modelSelectorBadge">
+            <span class="model-dot"></span>
+            <span id="activeSchemeLabel">HDFC Mutual Fund Knowledge Base</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <div class="badge-compliance">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Facts-Only (SEBI Compliance)</span>
+          </div>
+          <button class="btn-secondary" onclick="exportChatTranscript()" title="Export Discussion">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Content Area -->
+      <div class="content-area" id="contentArea">
+
+        <!-- ====================================================
+             HERO STATE (Iridescent Orb + Centered Prompt Box)
+             ==================================================== -->
+        <div class="hero-container" id="heroContainer">
+          
+          <!-- Iridescent Orb -->
+          <div class="orb-wrapper">
+            <div class="iridescent-orb">
+              <div class="orb-highlight"></div>
+            </div>
+          </div>
+
+          <div class="hero-greeting">Hello, Investor</div>
+          <h1 class="hero-headline">How can I assist you today?</h1>
+
+          <!-- Floating Prompt Input Card -->
+          <div class="prompt-card">
+            <textarea 
+              id="heroInput" 
+              placeholder="Ask anything about HDFC Mutual Funds (TER, exit load, lock-in, statements)..." 
+              rows="2"
+              onkeydown="handleHeroKeydown(event)"
+            ></textarea>
+            
+            <div class="prompt-card-actions">
+              <div class="action-left">
+                <div class="pill-badge">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  <select id="heroSchemeSelect" onchange="syncSchemeFromDropdown(this.value)">
+                    <option value="">⚡ All Schemes</option>
+                    <option value="HDFC Nifty 50 Index Fund">HDFC Nifty 50 Index</option>
+                    <option value="HDFC Flexi Cap Fund">HDFC Flexi Cap</option>
+                    <option value="HDFC ELSS Tax Saver Fund">HDFC ELSS Tax Saver</option>
+                    <option value="General Account Operations">Statement & CAS</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="action-right">
+                <button class="btn-send-hero" id="btnHeroSend" onclick="submitFromHero()" title="Send Question">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prompt Footer Quick Tags -->
+          <div class="prompt-footer-row">
+            <div class="prompt-pills-row">
+              <span class="quick-tag" onclick="triggerPreset('What is the expense ratio of HDFC Flexi Cap Fund?')">+ Flexi Cap TER</span>
+              <span class="quick-tag" onclick="triggerPreset('What is the lock-in period for HDFC ELSS Tax Saver Fund?')">+ 3-Yr Lock-in</span>
+              <span class="quick-tag" onclick="triggerPreset('What is the exit load for HDFC Nifty 50 Index Fund?')">+ Nil Exit Load</span>
+              <span class="quick-tag" onclick="triggerPreset('How can I download my mutual fund account statement?')">+ Account Statement</span>
+              <span class="quick-tag" onclick="triggerPreset('Should I buy HDFC Flexi Cap Fund for high returns?')">+ Test Guardrail</span>
+            </div>
+          </div>
+
+          <!-- 3 Curated Feature Cards (Matching Image 2) -->
+          <div class="feature-cards-grid">
+            <div class="feature-card" onclick="triggerPreset('What is the expense ratio of HDFC Flexi Cap Fund?')">
+              <div class="feature-icon-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="feature-title">Expense Ratios (TER)</div>
+              <div class="feature-desc">Retrieve latest audited & monthly TER disclosures for Direct and Regular plans.</div>
+            </div>
+
+            <div class="feature-card" onclick="triggerPreset('What is the lock-in period for HDFC ELSS Tax Saver Fund?')">
+              <div class="feature-icon-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="feature-title">ELSS Tax Lock-in</div>
+              <div class="feature-desc">Verify Section 80C tax deduction rules and mandatory 3-year statutory lock-in terms.</div>
+            </div>
+
+            <div class="feature-card" onclick="triggerPreset('How can I download my mutual fund account statement?')">
+              <div class="feature-icon-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12 9 15"/></svg>
+              </div>
+              <div class="feature-title">Statement & CAS Guide</div>
+              <div class="feature-desc">Step-by-step procedures for downloading single-folio and consolidated statements.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ====================================================
+             CONVERSATION STREAM VIEW
+             ==================================================== -->
+        <div class="chat-view" id="chatView">
+          <!-- Dynamic conversation messages will appear here -->
+        </div>
+
+      </div>
+
+      <!-- Pinned Bottom Bar (Visible when conversation is active) -->
+      <div class="bottom-input-bar" id="bottomInputBar" style="display: none;">
+        <div class="bottom-input-container">
+          <input 
+            type="text" 
+            id="bottomInput" 
+            placeholder="Ask a follow-up question (e.g. exit load, minimum SIP, fund manager)..."
+            autocomplete="off"
+            onkeydown="handleBottomKeydown(event)"
+          />
+          <button class="btn-send-bottom" id="btnBottomSend" onclick="submitFromBottom()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
   </div>
 
+  <!-- ========================================================
+       APPLICATION LOGIC & API INTEGRATION
+       ======================================================== -->
   <script>
     let activeScheme = "";
+    let conversationHistory = [];
 
-    // Scheme Filter Selection
-    document.querySelectorAll('.filter-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        activeScheme = pill.getAttribute('data-scheme');
-      });
-    });
-
-    function askQuestion(text) {
-      document.getElementById('userInput').value = text;
-      handleSend(new Event('submit'));
+    // Toggle Sidebar
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('collapsed');
     }
 
-    async function handleSend(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('userInput');
-      const query = input.value.trim();
-      if (!query) return;
+    // Set Active Scheme Filter
+    function setSchemeFilter(schemeName) {
+      activeScheme = schemeName;
+      document.getElementById('heroSchemeSelect').value = schemeName;
+      
+      // Update label
+      const label = document.getElementById('activeSchemeLabel');
+      label.textContent = schemeName ? schemeName : 'HDFC Mutual Fund Knowledge Base';
 
-      const chatMessages = document.getElementById('chatMessages');
-      const sendBtn = document.getElementById('sendBtn');
+      // Update Nav active state
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      if (!schemeName) {
+        document.querySelector('[data-nav="all"]')?.classList.add('active');
+      } else if (schemeName.includes('Nifty')) {
+        document.querySelector('[data-nav="nifty50"]')?.classList.add('active');
+      } else if (schemeName.includes('Flexi')) {
+        document.querySelector('[data-nav="flexicap"]')?.classList.add('active');
+      } else if (schemeName.includes('ELSS')) {
+        document.querySelector('[data-nav="elss"]')?.classList.add('active');
+      } else if (schemeName.includes('Account')) {
+        document.querySelector('[data-nav="operations"]')?.classList.add('active');
+      }
+    }
+
+    function syncSchemeFromDropdown(val) {
+      setSchemeFilter(val);
+    }
+
+    // Reset to New Chat / Hero View
+    function resetToNewChat() {
+      document.getElementById('heroContainer').classList.remove('hidden');
+      document.getElementById('chatView').classList.remove('active');
+      document.getElementById('bottomInputBar').style.display = 'none';
+      document.getElementById('chatView').innerHTML = '';
+      document.getElementById('heroInput').value = '';
+      conversationHistory = [];
+    }
+
+    // Preset / Quick Tag triggers
+    function triggerPreset(question) {
+      document.getElementById('heroInput').value = question;
+      submitFromHero();
+    }
+
+    function handleHeroKeydown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitFromHero();
+      }
+    }
+
+    function handleBottomKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitFromBottom();
+      }
+    }
+
+    function submitFromHero() {
+      const input = document.getElementById('heroInput');
+      const text = input.value.trim();
+      if (!text) return;
+      processUserQuery(text);
+      input.value = '';
+    }
+
+    function submitFromBottom() {
+      const input = document.getElementById('bottomInput');
+      const text = input.value.trim();
+      if (!text) return;
+      processUserQuery(text);
+      input.value = '';
+    }
+
+    // Main RAG Pipeline Invocation
+    async function processUserQuery(query) {
+      const heroContainer = document.getElementById('heroContainer');
+      const chatView = document.getElementById('chatView');
+      const bottomBar = document.getElementById('bottomInputBar');
+      const contentArea = document.getElementById('contentArea');
+
+      // Switch views
+      heroContainer.classList.add('hidden');
+      chatView.classList.add('active');
+      bottomBar.style.display = 'flex';
 
       // Append User message
-      const userMsgDiv = document.createElement('div');
-      userMsgDiv.className = 'message user';
-      userMsgDiv.innerHTML = `<div class="bubble">${escapeHtml(query)}</div>`;
-      chatMessages.appendChild(userMsgDiv);
-      input.value = '';
+      appendUserMessage(query);
 
-      // Append Assistant loading message
-      const loadingDiv = document.createElement('div');
-      loadingDiv.className = 'message assistant';
-      loadingDiv.innerHTML = `
-        <div class="bubble" style="display:flex; align-items:center; gap:8px;">
-          <div class="spinner" style="border-top-color: var(--primary);"></div>
-          <span>Retrieving official disclosures and synthesizing answer...</span>
-        </div>
-      `;
-      chatMessages.appendChild(loadingDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      // Append Loading Assistant Skeleton
+      const loadingRow = appendAssistantLoading();
+      contentArea.scrollTop = contentArea.scrollHeight;
 
-      sendBtn.disabled = true;
+      // Disable buttons
+      setSendButtonsState(true);
+
+      // Save to recent questions
+      addToHistory(query);
 
       try {
         const response = await fetch('/api', {
@@ -508,63 +1390,160 @@
         });
 
         const data = await response.json();
-        chatMessages.removeChild(loadingDiv);
+        chatView.removeChild(loadingRow);
 
-        const assistantMsgDiv = document.createElement('div');
-        assistantMsgDiv.className = 'message assistant';
-
-        let citationsHtml = '';
-        if (data.citations && data.citations.length > 0) {
-          citationsHtml = `
-            <div class="citations-card">
-              <div class="citations-header">📚 Official Document Citations</div>
-              ${data.citations.map(c => `
-                <div class="citation-item">
-                  <div class="citation-title">${escapeHtml(c.document_title || 'Official Document')}</div>
-                  <div class="citation-meta">
-                    <span class="meta-tag">📄 Page ${c.page_number}</span>
-                    <span class="meta-tag">📅 ${escapeHtml(c.published_date || 'N/A')}</span>
-                    ${c.scheme_name ? `<span class="meta-tag">🏷️ ${escapeHtml(c.scheme_name)}</span>` : ''}
-                    <a href="${escapeHtml(c.source_url)}" target="_blank" rel="noopener noreferrer" class="citation-link">
-                      View Official PDF ↗
-                    </a>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          `;
-        }
-
-        const disclaimerHtml = `
-          <div class="disclaimer-badge">
-            Mutual fund investments are subject to market risks. Read all scheme related documents carefully.
-          </div>
-        `;
-
-        assistantMsgDiv.innerHTML = `
-          <div class="bubble">
-            <div>${formatAnswerText(data.answer_body || data.formatted_response || 'No response returned.')}</div>
-            ${citationsHtml}
-            ${disclaimerHtml}
-          </div>
-        `;
-
-        chatMessages.appendChild(assistantMsgDiv);
+        appendAssistantMessage(data);
       } catch (err) {
-        console.error(err);
-        if (loadingDiv.parentNode) chatMessages.removeChild(loadingDiv);
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'message assistant';
-        errorDiv.innerHTML = `
-          <div class="bubble" style="border-left: 3px solid #e53935;">
-            <strong>Error:</strong> Could not connect to the FAQ Assistant API. Please ensure the backend is running and environment variables are set.
+        console.error('API Error:', err);
+        if (loadingRow.parentNode) chatView.removeChild(loadingRow);
+        appendErrorMessage("Could not connect to the FAQ Assistant API. Please ensure your backend is deployed and environment variables are active.");
+      } finally {
+        setSendButtonsState(false);
+        contentArea.scrollTop = contentArea.scrollHeight;
+      }
+    }
+
+    function appendUserMessage(text) {
+      const chatView = document.getElementById('chatView');
+      const row = document.createElement('div');
+      row.className = 'message-row user';
+      row.innerHTML = `<div class="bubble-user">${escapeHtml(text)}</div>`;
+      chatView.appendChild(row);
+      conversationHistory.push({ role: 'user', content: text });
+    }
+
+    function appendAssistantLoading() {
+      const chatView = document.getElementById('chatView');
+      const row = document.createElement('div');
+      row.className = 'message-row assistant';
+      row.innerHTML = `
+        <div class="assistant-avatar">G</div>
+        <div class="assistant-body">
+          <div class="assistant-bubble" style="display: flex; align-items: center; gap: 10px; color: var(--text-muted);">
+            <div class="spinner-pulse"></div>
+            <span>Retrieving official disclosures and synthesizing verified answer...</span>
+          </div>
+        </div>
+      `;
+      chatView.appendChild(row);
+      return row;
+    }
+
+    function appendAssistantMessage(data) {
+      const chatView = document.getElementById('chatView');
+      const row = document.createElement('div');
+      row.className = 'message-row assistant';
+
+      let citationsHtml = '';
+      if (data.citations && data.citations.length > 0) {
+        citationsHtml = `
+          <div class="citations-box">
+            <div class="citations-heading">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              <span>Verified Official Source Citations</span>
+            </div>
+            ${data.citations.map(c => `
+              <div class="citation-entry">
+                <div class="citation-name">${escapeHtml(c.document_title || data.document_title || 'HDFC Official Document')}</div>
+                <div class="citation-tags">
+                  <span class="tag-chip">📄 Page ${c.page_number || data.page_number || 1}</span>
+                  <span class="tag-chip">📅 ${escapeHtml(c.published_date || data.last_updated || 'Current')}</span>
+                  ${c.scheme_name ? `<span class="tag-chip">🏷️ ${escapeHtml(c.scheme_name)}</span>` : ''}
+                  <a href="${escapeHtml(c.source_url || data.source_link || 'https://www.hdfcfund.com')}" target="_blank" rel="noopener noreferrer" class="tag-link">
+                    View Official PDF ↗
+                  </a>
+                </div>
+              </div>
+            `).join('')}
           </div>
         `;
-        chatMessages.appendChild(errorDiv);
-      } finally {
-        sendBtn.disabled = false;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
       }
+
+      const complianceHtml = `
+        <div class="compliance-footer">
+          Mutual fund investments are subject to market risks. Read all scheme related documents carefully. Facts-only information, not investment advice.
+        </div>
+      `;
+
+      const answerText = data.answer_body || data.formatted_response || 'No response returned.';
+
+      row.innerHTML = `
+        <div class="assistant-avatar">G</div>
+        <div class="assistant-body">
+          <div class="assistant-bubble">
+            <div>${formatAnswerText(answerText)}</div>
+            ${citationsHtml}
+            ${complianceHtml}
+          </div>
+        </div>
+      `;
+
+      chatView.appendChild(row);
+      conversationHistory.push({ role: 'assistant', content: answerText, citations: data.citations });
+    }
+
+    function appendErrorMessage(err) {
+      const chatView = document.getElementById('chatView');
+      const row = document.createElement('div');
+      row.className = 'message-row assistant';
+      row.innerHTML = `
+        <div class="assistant-avatar" style="background: #EF4444;">!</div>
+        <div class="assistant-body">
+          <div class="assistant-bubble" style="border-left: 3px solid #EF4444; color: #B91C1C;">
+            ${escapeHtml(err)}
+          </div>
+        </div>
+      `;
+      chatView.appendChild(row);
+    }
+
+    function setSendButtonsState(disabled) {
+      document.getElementById('btnHeroSend').disabled = disabled;
+      document.getElementById('btnBottomSend').disabled = disabled;
+    }
+
+    // Add query to recent inquiries
+    function addToHistory(query) {
+      const historyList = document.getElementById('historyList');
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.textContent = query;
+      item.onclick = () => triggerPreset(query);
+      historyList.insertBefore(item, historyList.firstChild);
+
+      // Keep max 10
+      if (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+      }
+    }
+
+    function filterHistory(filterText) {
+      const query = filterText.toLowerCase();
+      document.querySelectorAll('#historyList .history-item').forEach(item => {
+        if (item.textContent.toLowerCase().includes(query)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function exportChatTranscript() {
+      if (conversationHistory.length === 0) {
+        alert("No messages to export yet.");
+        return;
+      }
+      let transcript = "# Groww Mutual Fund FAQ Assistant - Chat Export\n\n";
+      conversationHistory.forEach(msg => {
+        transcript += `### ${msg.role.toUpperCase()}:\n${msg.content}\n\n`;
+      });
+      const blob = new Blob([transcript], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `groww-chat-${new Date().toISOString().slice(0,10)}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     function formatAnswerText(text) {
