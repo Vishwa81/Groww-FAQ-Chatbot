@@ -1066,8 +1066,17 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Mobile Responsive */
-    @media (max-width: 900px) {
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 250px;
+      }
+      .feature-cards-grid {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 768px) {
       body {
         padding: 0;
       }
@@ -1082,7 +1091,13 @@
         top: 0;
         bottom: 0;
         height: 100%;
+        width: 280px;
         box-shadow: var(--shadow-float);
+        transform: translateX(-100%);
+        z-index: 50;
+      }
+      .sidebar.open {
+        transform: translateX(0);
       }
       .btn-toggle-sidebar {
         display: flex;
@@ -1187,12 +1202,12 @@
           <div class="user-avatar">VR</div>
           <div class="user-info">
             <div class="user-name">Vishwajeet Rawat</div>
-            <div class="user-role">Groww Investor • Verified</div>
+            <div class="user-role">Verified Investor</div>
           </div>
         </div>
         <div class="db-status-pill" title="Neon PostgreSQL pgvector Connected">
           <span class="db-status-dot"></span>
-          <span>Neon pgvector</span>
+          <span>pgvector</span>
         </div>
       </div>
 
@@ -1357,7 +1372,11 @@
     // Toggle Sidebar
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('collapsed');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('open');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
     }
 
     // Set Active Scheme Filter
